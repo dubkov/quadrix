@@ -10,7 +10,12 @@
 #define SHOWTIME 500
 #define CLKTIME 10
 
-uint16_t theBigXtop[8]={
+#define COLSNUM 16
+#define ROWSNUM 16
+#define HALFCOLSNUM 8
+#define HALFROWSNUM 8
+
+uint16_t theBigX[ROWSNUM]={
 0b0000000000000000,
 0b1111000000001111,
 0b0110000000000110,
@@ -18,9 +23,7 @@ uint16_t theBigXtop[8]={
 0b0001100000011000,
 0b0000110000110000,
 0b0000011001100000,
-0b0000001111000000},
-
-theBigXbottom[8]={
+0b0000001111000000,
 0b0000001111000000,
 0b0000011001100000,
 0b0000110000110000,
@@ -44,7 +47,7 @@ void setup()
 
 void loop()
  {
-   for(int bigXrowNumber=0; bigXrowNumber<16;bigXrowNumber++)   show(theBigXtop,theBigXbottom);
+   show(theBigX);
  }
  
  void transferBits(boolean bitToSendTop, boolean bitToSendBottom){
@@ -58,8 +61,8 @@ void loop()
 
  void transferLines(uint16_t lineToSendTop, uint16_t lineToSendBottom){
    digitalWrite(STB,LOW);
-   for(int i=0; i<8; i++) transferBits(lineToSendTop&(1<<i),lineToSendBottom&(1<<i));
-   for(int i=0; i<8; i++) transferBits(lineToSendTop>>8&(1<<i),lineToSendBottom>>8&(1<<i));
+   for(int i=0; i<HALFROWSNUM; i++) transferBits(lineToSendTop&(1<<i),lineToSendBottom&(1<<i));
+   for(int i=0; i<HALFROWSNUM; i++) transferBits(lineToSendTop>>HALFCOLSNUM&(1<<i),lineToSendBottom>>HALFCOLSNUM&(1<<i));
    digitalWrite(STB,HIGH);
  }
 
@@ -75,10 +78,10 @@ void loop()
    digitalWrite(OE,HIGH);
  }
  
- void show(uint16_t topLine[8], uint16_t bottomLine[8]){
-    for (int j=0;j<8;j++){
+ void show(uint16_t picture[16]){
+    for (int j=0;j<HALFROWSNUM;j++){
       selectRow(j);
-      transferLines(topLine[j],bottomLine[j]);
+      transferLines(picture[j],picture[j+HALFROWSNUM]);
       showLine();
    }
  }
