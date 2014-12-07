@@ -1,3 +1,9 @@
+// Quadrix project is 16x16 monocolored display for cellular automaton visualization
+// Current file is sample code for displaying big letter X
+// created 06.12.2014 by Ilya Dubkov during Hackember event in NSTU
+// http://developer-x.ru dubkov@skbrii.ru
+
+
 #define CLK 13
 #define STB 12
 #define OE 11
